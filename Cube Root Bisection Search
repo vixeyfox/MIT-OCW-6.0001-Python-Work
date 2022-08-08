@@ -1,0 +1,103 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Aug  8 15:26:30 2022
+
+@author: vixey
+"""
+#Bisection search for cube roots
+# Vixey MIT OCW 6.001 (Python) Lecture 3 Extra Challenge Problems
+# 8/8/2022
+# Sample code provided in lecture only worked for positive cubes greater than 1
+# Adapted simple bisection search to find cube roots so that negative cubes
+# and cubes with an absolute value of less than 1 are covered correctly
+cube= -0.125
+cube = float(input("Enter a cube for which you seek to find its cube root: "))
+epsilon = 0.01
+num_guesses= 0
+low = 0
+high = cube
+guess = (high + low)/2.0
+# This works for a positive cube greater than 1
+# Guesses n, n/2, n/4, n/(2^k) as kth guess    
+neg_Flag = False
+below_1_Flag = False
+# Defaults that only are activated for special cases of cube < 0 and/or abs(cube) < 1
+
+if cube < 0:
+    neg_Flag = True
+    low = cube
+    high = 0
+    guess = (high + low)/2.0
+# This works for a negative cube below -1 by guessing half of the cube for its cube root
+
+if abs(cube) < 1:
+    below_1_Flag = True
+    
+if below_1_Flag == True and neg_Flag == False:
+# If cube is between 0 and 1, its cube root is a larger positive number
+    epsilon = 0.00001
+# Using the old epsilon = 0.1 allows for highly inaccurate results like 0.125875 for 0.001's cube root
+# which is actually 0.1. This effect is most pronounced for cube roots below 1
+    low = cube
+    high = 1
+# Any cube between 0 and 1 (such as 0.001) will have a cube root found between itself and 1 (like 0.1)
+    guess = (high + low)/2.0
+if below_1_Flag == True and neg_Flag == True:
+# If cube is between -1 and 0, its cube root is a smaller negative number that's above -1
+# For instance -0.125 has a cube root of -0.5
+    epsilon = 0.00001
+    low = -1
+    high = cube     
+# Any cube between -1 and 0 will have a cube root found between -1 and itself
+    guess = (high + low)/2.0
+
+while abs(guess**3 -cube) >= epsilon:
+# epsilon is the greatest permissible difference between the cube root guess (cubed) and the real cube    
+    if below_1_Flag == True and neg_Flag == False:
+# For positive cubes between 0 and 1        
+        if guess**3 < cube:
+            low = guess
+# The guess is a positive number whose magnitude is less than the correct cube root
+# So the guess becomes the new lower bound, instead of 0 or the preceding guess     
+# The cube (0.125 for instance) is smaller than its cube root (0.5 for instance) (Special Case) 
+        else:
+# The guess is a positive number whose magnitude is more than the correct cube root
+            high = guess
+# In this case, the guess becomes the new upper bound           
+        guess = (high + low)/2.0
+        num_guesses += 1            
+    if below_1_Flag == True and neg_Flag == True:
+# The cube is between -1 and 0        
+        if guess**3 < cube:
+# The guess is a negative number whose magnitude is greater than the correct cube root
+            low = guess  
+# In this case, the guess becomes the new lower bound            
+        else:
+# The guess is a negative number whose magnitude is less than the correct cube root
+            high = guess   
+# In this case, the guess becomes the new upper bound            
+        guess = (high + low)/2.0
+        num_guesses += 1 
+# By the time the code gets to here, it is clear that the cube is a negative number below -1    
+    if neg_Flag == True:
+        if guess**3 < cube:            
+            low = guess
+# The guess is a negative number whose magnitude is too large. Make it the new lower bound.            
+        else:
+            high = guess
+# The guess is a negative number whose magnitude is too small. Make it the new upper bound.
+        guess = (high + low)/2.0
+        num_guesses += 1
+    else: 
+# If the code gets to here, the cube is a positive number greater than 1        
+        if guess**3 < cube:
+# Look in the upper half of the bisection search space, since positive guess is too small        
+            low = guess
+        else:
+# Look in the lower half of the bisection search space, since positive guess is too large           
+            high = guess
+    guess = (high + low)/2.0
+    num_guesses+= 1
+print('num_guesses=', num_guesses)
+print(guess, 'is close to the cube root of', cube)
+   
