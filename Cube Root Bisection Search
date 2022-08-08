@@ -18,7 +18,7 @@ low = 0
 high = cube
 guess = (high + low)/2.0
 # This works for a positive cube greater than 1
-# Guesses n, n/2, n/4, n/(2^k) as kth guess    
+# Guesses n, n/2, n/4, n/(2^k) as k+1th guess    
 neg_Flag = False
 below_1_Flag = False
 # Defaults that only are activated for special cases of cube < 0 and/or abs(cube) < 1
