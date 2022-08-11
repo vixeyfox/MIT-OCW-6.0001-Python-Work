@@ -1,0 +1,83 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Aug 11 15:26:44 2022
+
+@author: vixey foxwish
+"""
+# MIT OCW 6.001 Python Course
+# Problem Set 1 is the second homework that follows Problem Set 0
+# Comes with three parts (1A, 1B, and 1C)
+
+# You have graduated and now have a great job. You move to the SF Bay Area and 
+# decide that you want to start saving to buy a house. As housing prices are
+# very high in the Bay Area, you realize you are going to have to save for 
+# several years before you can afford to make the down payment on a house.
+# In Part A, we are going to determine how long it will take you to save
+# enough money to make the down payment given the following assumptions:
+
+    # 1. Call the cost of your dream home total_cost.
+    # 2. Call the portion of the cost needed for a down payment portion_down_payment
+    # For simplicity, assume that portion_down_payment = 0.25 (25 %)
+    # 3. Call the amount that you have saved thus far current_savings.
+    # You start with a current savings of $0.
+    # 4. Assume that you invest your current savings wisely, with an annual return of r
+    # (in other words, at the end of each month, you receive an additional
+    # current_savings*r/12 funds to put into your savings, in monthly returns)
+    
+#My original observations follow below:    
+    # Assume that your investments earn an annual return of r=0.04 (4 %)
+    # In each monthly interval of time (not accounting for compounding)
+    # Note that this is the simple + (1/12 of "annual" return) per month not 1.04^(1/12)
+    # In other words each monthly gain is .333...% not .327% (which considers compounding)
+    # since 4% / 12 = 0.333...% per month and 1.04^(1/12) = 0.327...% per month
+    # Using the specified simplification of 0.333...% per month, the true annual
+    # rate of return is (1.00333...)^12 = 1.0407... so r is slightly above 4.07% now
+    # The specified parameters for this problem do not ask to model the effect of compounding.
+    # So I will disregard the minute discrepancy of compounding and just
+    # use 0.333% monthly gains each month as asked and call this (imperfect) modeling of r = 0.04
+    # since that is the model asked for in the homework assignment
+    
+ # Resuming the instructions as provided in the problem set:
+     
+    # 5. Assume your annual salary is annual_salary.
+    # 6. Assume you are going to dedicate a certain amount of your salary each 
+    # month to saving for the down payment. Call that portion_saved. This variable
+    # should be in decimal form (i.e. 0.1 for 10 %)
+    # 7. At the end of each month, your savings will be increased by the return
+    # on your investment, plus a percentage of your monthly salary (annual salary / 12)
+ 
+# Write a program to calculate how many months it will take you to save up
+# enough money for a down payment. You will want your main variables to be 
+# floats, so you should cast user inputs to floats.
+# Your program should ask the user to enter the following variables:
+    # 1. The starting annual salary (annual_salary)
+    # 2. The portion of salary to be saved (portion_saved)
+    # 3. The cost of your dream home (total_cost)
+# Begin by initializing variables
+portion_down_payment = 0.25
+r = 0.04
+current_savings = 0
+month_count = 0
+annual_salary = float(input("Enter your annual salary: \n"))   
+portion_saved = float(input("Enter the percent of your salary to save, as a decimal: \n"))
+total_cost = float(input("Enter the cost of your dream home: \n"))
+
+down_required = portion_down_payment*total_cost
+monthly_unadjusted_return = r/12
+# This doesn't account for true r compounding 1.04^(1/12) and is just .04/12 monthly instead
+
+while current_savings < down_required:
+    month_count += 1
+ # This starts the month increment increasing by 1 before end of the month changes   
+    monthly_gain = current_savings*monthly_unadjusted_return
+ # This is the gain caused by the monthly return on previously saved funds   
+    current_savings += monthly_gain
+    monthly_contribution = annual_salary*(1/12)*portion_saved
+# This is the newly added money from the salary being added at end of month
+# (There hasn't been any time elapsed for investment gains, so it comes separately)   
+    current_savings += monthly_contribution
+    
+print("Number of months: ", month_count)    
+
+# Verified that (120,000; .10; 1,000,000) returns 183 months as in HW answers
+# Verified that (80,000; .15; 500,000) returns 105 months as in the HW answers
