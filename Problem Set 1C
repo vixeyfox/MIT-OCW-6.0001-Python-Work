@@ -1,0 +1,144 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Aug 13 12:44:30 2022
+
+@author: vixey foxwish
+"""
+
+# =============================================================================
+# In Part B, you had a chance to explore how both the percentage of your salary that you save each month
+# and your annual raise affect how long it takes you to save for a down payment. This is nice, but
+# suppose you want to set a particular goal, e.g. to be able to afford the down payment in three years.
+# How much should you save each month to achieve this? In this problem, you are going to write a
+# program to answer that question. To simplify things, assume:
+# 
+# 1. Your semiannual raise is .07 (7%)
+# 2. Your investments have an annual return of 0.04 (4%)
+# 3. The down payment is 0.25 (25%) of the cost of the house
+# 4. The cost of the house that you are saving for is $1M.
+# You are now going to try to find the best rate of savings to achieve a down payment on a $1M house in
+# 36 months. Since hitting this exactly is a challenge, we simply want your savings to be within $100 of
+# the required down payment.
+# 
+# In ps1c.py , write a program to calculate the best savings rate, as a function of your starting salary.
+# You should use bisection search to help you do this efficiently. You should keep track of the number of
+# steps it takes your bisections search to finish. You should be able to reuse some of the code you wrote
+# for part B in this problem.
+# (n.b. Omitted part that specified using integer division to only calculate to 4 decimal places)
+
+# Try different inputs for your starting salary, and see how the percentage you need to save changes to
+# reach your desired down payment. Also keep in mind it may not be possible for to save a down
+# payment in a year and a half for some salaries. In this case your function should notify the user that it
+# is not possible to save for the down payment in 36 months with a print statement. Please make your
+# program print results in the format shown in the test cases below.
+
+# Note: There are multiple right ways to implement bisection search/number of steps so your
+# results may not perfectly match those of the test case.
+# Hints
+# ● There may be multiple savings rates that yield a savings amount that is within $100 of the
+# required down payment on a $1M house. In this case, you can just return any of the possible
+# values.
+# ● Depending on your stopping condition and how you compute a trial value for bisection search,
+# your number of steps may vary slightly from the example test cases.
+# ● Watch out for integer division when calculating if a percentage saved is appropriate and when
+# calculating final decimal percentage savings rate.
+# ● Remember to reset the appropriate variable(s) to their initial values for each iteration of bisection
+# search.
+# =============================================================================
+# Test case 1: Starting salary: 150,000. Best savings rate: 0.4411 Steps in bisection search: 12
+        # My results: 0.4410 savings rate; 8 steps in bisection search
+        
+# Test case 2: Starting salary: 300,000. Best savings rate: 0.2206 Steps in bisection search: 9
+        # My results: 0.2206 savings rate; 12 steps in bisection search
+        
+# Test case 3: Starting salary: 10,000. (It is not possible to pay the down payment in three years.)
+        # My results: It is not possible to pay the down payment in three years.
+            
+# The price of the house
+total_cost = 1000000
+# Percentage of house price required in the down payment
+portion_down_payment = 0.25
+# The size of the required down payment
+down_required = portion_down_payment*total_cost
+# Initialize the starting time with no savings
+time_in_months = 0
+current_saved = 0
+# A starting guess, saving 10% of one's pay each month
+guess = 0.1
+# The lowest savings rate is saving none of one's pay
+low = 0
+# The highest savings rate is saving all of one's pay
+high = 1
+# Initialize the number of steps taken in the bisection search guesses
+steps = 0
+# An annual rate of return on investments
+r = 0.04
+# Every six months, the salary is increased by 7% for career advancement
+semi_annual_raise = .07
+# This doesn't account for true monthly compounding 1.04^(1/12) = 0.327 % monthly gain and is just .04/12 = 0.333 % monthly gain instead
+monthly_unadjusted_return = r/12
+# For very low salaries, it is not possible to afford the house down payment in three years of saving everything
+Success_flag = False
+
+annual_salary = float(input("Enter your annual salary: \n")) 
+# Important to be able to reset to this original value after it has grown over time in simulations  
+original_salary = annual_salary
+
+# This while loop runs while the current saved amount is not within $100 of the required down payment
+# at any time in the three years, so long as the number of steps is below 15.
+
+while abs(current_saved - down_required) >= 100 and time_in_months <= 36 and steps < 15:
+    # Start the passage of time
+    time_in_months += 1
+    # Use the simplified investment return of 0.333% per month to grow the existing savings
+    monthly_gain = current_saved*monthly_unadjusted_return
+    # Add the investment gain to the savings
+    current_saved += monthly_gain
+    # Make a new monthly contribution with the monthly salary (1/12 annual) and a guessed savings rate
+    monthly_contribution = annual_salary*(1/12)*guess
+    current_saved += monthly_contribution
+    # The saver earns a semi-annual raise while advancing in its career
+    if time_in_months%6 == 0:
+       # Useful readout code to display what's happening when tinkering with this program 
+       # Helpful for troubleshooting (Uncomment to activate)
+       # print("time for a raise at month", time_in_months, "up to", annual_salary)
+        annual_salary *= (1 + semi_annual_raise)
+
+    if current_saved + 100 < down_required and time_in_months >= 36:
+       # These conditions are achieved when it does not reach the required down payment within three years  
+       # It is saving too slowly to hit its targeted goal  
+       # Useful readout code to display what's happening when tinkering with this program
+       # Helpful for troubleshooting (Uncomment to activate)
+       # print("too slow with", guess, "savings rate", "attempt number:", steps+1)
+       # Reset values and try again with a higher savings rate, guess as new lower bound
+        low = guess
+        guess = (low + high)/2.0
+        time_in_months = 0
+        current_saved = 0
+        annual_salary = original_salary
+        steps += 1    
+
+    elif current_saved - 100 > down_required and time_in_months <= 36:
+       # These conditions are acheived when it exceeds the down payment by more than $100 within three years
+       # It is saving too rapidly to hit its targeted goal       
+       # Useful readout code to display what's happening when tinkering with this program
+       # Helpful for troubleshooting (Uncomment to activate)
+       # print("too fast with", guess, "savings rate", "attempt number:", steps+1)
+       # Reset values and try again with a lower savings rate, guess as new upper bound
+        high = guess
+        guess = (low + high)/2.0
+        time_in_months = 0
+        current_saved = 0
+        annual_salary = original_salary
+        steps += 1
+    elif abs(current_saved - down_required) <= 100 and time_in_months == 36:
+        Success_flag = True
+       # Useful code for troubleshooting (Uncomment to activate)
+       # print("Success with", guess, "savings rate")
+if steps >= 15 and Success_flag == False:
+    print("It is not possible to pay the down payment in three years.")         
+elif Success_flag == True:
+   # Should always be 36 when the code gets here (useful for troubleshooting; uncomment to activate) 
+   # print("it took this many months:", time_in_months) 
+    print("Best savings rate was:", guess)
+    print("Steps in bisection search:", steps)
