@@ -5,7 +5,7 @@ Created on Mon Aug  8 15:26:30 2022
 @author: vixey
 """
 #Bisection search for cube roots
-# Vixey MIT OCW 6.001 (Python) Lecture 3 Extra Challenge Problems
+# Vixey MIT OCW 6.0001 (Python) Lecture 3 Extra Challenge Problems
 # 8/8/2022
 # Sample code provided in lecture only worked for positive cubes greater than 1
 # Adapted simple bisection search to find cube roots so that negative cubes
