@@ -1,0 +1,24 @@
+# Own code based on the MIT 6.0001 Python Course Lecture 6 on Recursion and Dictionaries
+# Function that generates the nth Fibonacci number and a for loop using a range to test it out
+# This method is much slower than the alternative solution (using list iteration) that I submitted to solve the LeetCode #509 Fibonacci number problem faster than most
+    # Using list iteration is faster than most LeetCode solutions, while using recursion is much slower to run through due to all the name spaces/scopes of recursion
+# 9/30/2022 Vixey Foxwish Douglas
+
+def recursive_fibo(n):
+    """ Recursive way to get nth Fibonacci number where F(0) = 0, F(1) = 1
+    and F(n) = F(n-1) + F(n-2) and yields correct 0,1,1,2,3,5,8,13,... """
+    if n == 0 or n == 1:
+        return n # The first two values for the 0th and 1st Fibonacci number are 0 and 1, respectively
+    else:
+        next_fibo = recursive_fibo(n - 1) + recursive_fibo(n - 2) # this function's definition calls itself to list a Fibonacci number as sum of two preceding values
+        return next_fibo
+    
+for n in range(1, 16): # Testing that the code works for the first 15 Fibonacci numbers which correctly come out as 1,1,2,3,5,8,13, ...
+    if n == 1:
+        print(recursive_fibo(n), 'is the', n, 'st Fibonacci number')  # special case First -> 1st
+    elif n == 2:
+        print(recursive_fibo(n), 'is the', n, 'nd Fibonacci number')  # special case Second -> 2nd
+    elif n == 3:
+        print(recursive_fibo(n), 'is the', n, 'rd Fibonacci number') # special case Third -> 3rd
+    else:
+        print(recursive_fibo(n), 'is the', n, 'th Fibonacci number') # 4th, 5th, etc. follow the regular "th" rule for naming the sequence
