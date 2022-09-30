@@ -2,6 +2,7 @@
 # Function that generates the nth Fibonacci number and a for loop using a range to test it out
 # This method is much slower than the alternative solution (using list iteration) that I submitted to solve the LeetCode #509 Fibonacci number problem faster than most
     # Using list iteration is faster than most LeetCode solutions, while using recursion is much slower to run through due to all the name spaces/scopes of recursion
+    # List iteration solution to generate the Fibonacci numbers more quickly is available at "Leetcode #509 (E) Fibonacci Number" in "vixeyfox / LeetCode-Original-Solutions"
 # 9/30/2022 Vixey Foxwish Douglas
 
 def recursive_fibo(n):
@@ -13,12 +14,30 @@ def recursive_fibo(n):
         next_fibo = recursive_fibo(n - 1) + recursive_fibo(n - 2) # this function's definition calls itself to list a Fibonacci number as sum of two preceding values
         return next_fibo
     
-for n in range(1, 16): # Testing that the code works for the first 15 Fibonacci numbers which correctly come out as 1,1,2,3,5,8,13, ...
+# Testing that the code works for the first 20 Fibonacci numbers which correctly come out as 1,1,2,3,5,8,13, ...
+# Also includes code to approximate the Golden ratio as well as a more precise given value for this (1 + sqrt(5) )/2 irrational constant
+for n in range(1, 21):
     if n == 1:
-        print(recursive_fibo(n), 'is the', n, 'st Fibonacci number')  # special case First -> 1st
+        print(recursive_fibo(n), 'is the', n, 'st Fibonacci number.') 
+        # special case First -> 1st
     elif n == 2:
-        print(recursive_fibo(n), 'is the', n, 'nd Fibonacci number')  # special case Second -> 2nd
+        print(recursive_fibo(n), 'is the', n, 'nd Fibonacci number.', end=' ')
+        # special case Second -> 2nd
+        golden_ratio_appx = recursive_fibo(n)/recursive_fibo(n-1)
+        golden_rounded = round(golden_ratio_appx, 6)
+        print('Golden ratio approximately', golden_rounded)
     elif n == 3:
-        print(recursive_fibo(n), 'is the', n, 'rd Fibonacci number') # special case Third -> 3rd
+        print(recursive_fibo(n), 'is the', n, 'rd Fibonacci number.', end=' ')
+        # special case Third -> 3rd
+        golden_ratio_appx = recursive_fibo(n)/recursive_fibo(n-1)
+        golden_rounded = round(golden_ratio_appx, 6)
+        print('Golden ratio approximately', golden_rounded)
     else:
-        print(recursive_fibo(n), 'is the', n, 'th Fibonacci number') # 4th, 5th, etc. follow the regular "th" rule for naming the sequence
+        print(recursive_fibo(n), 'is the', n, 'th Fibonacci number.', end=' ')
+        # 4th, 5th, etc. follow the regular "th" rule for naming the sequence
+        golden_ratio_appx = recursive_fibo(n)/recursive_fibo(n-1)
+        golden_rounded = round(golden_ratio_appx, 6)
+        print('Golden ratio approximately', golden_rounded)
+phi = 1.618033988749 # sourced from Wikipedia, not the true value, as it is irrational 
+print('True golden ratio is actually closer to', phi)
+    
